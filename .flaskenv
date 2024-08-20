@@ -1,3 +1,3 @@
-FLASK_APP=imagecolor
-FLASK_ENV=dev
+FLASK_APP=app
+FLASK_ENV=development
 FLASK_RUN_PORT=8080
