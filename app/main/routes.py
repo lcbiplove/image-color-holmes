@@ -1,7 +1,7 @@
 from flask import render_template
-from app.main import blueprint
+from app.main import bp
 
 
-@blueprint.route("/")
+@bp.route("/")
 def index():
     return render_template("index.html")

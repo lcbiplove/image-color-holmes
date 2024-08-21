@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <span class="title"><h1>{% block title %} My test {% endblock %}</h1></span>
 {% endblock %}
