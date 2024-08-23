@@ -1,5 +1,6 @@
 const dropbox = document.getElementById("dropbox");
 const fileInput = document.getElementById("fileInput");
+const loader = document.getElementById("loader");
 
 // Trigger file input when dropbox is clicked
 dropbox.addEventListener("click", () => {
@@ -48,13 +49,24 @@ document.getElementById("uploadButton").addEventListener("click", () => {
 
   const formData = new FormData();
   formData.append("image", fileInput.files[0]);
-  console.log("FORM DATA", formData);
+  showLoader();
   fetch("/upload", {
     method: "POST",
     body: formData,
   })
     .then((response) => response.json())
     .then((data) => {
+        hideLoader();
       console.log(data);
     });
 });
+
+function hideLoader() {
+    loader.classList.add("hidden");
+    loader.classList.remove("flex");
+}
+
+function showLoader() {
+    loader.classList.remove("hidden");
+    loader.classList.add("flex");
+}
