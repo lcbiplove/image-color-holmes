@@ -47,7 +47,7 @@
 
         <p class="text-gray-600 mt-4">Please upload your image in one of the following formats:</p>
         <ul class="list-disc list-inside text-gray-600 mb-6">
-            <li>Image Files (.jpg, .png)</li>
+            <li>Image Files (.jpg, .png, .gif, .jpeg)</li>
         </ul>
 
         <div id="dropbox"
@@ -55,7 +55,8 @@
             <p class="text-gray-600 text-center">Drag and drop a file here or click to select a file</p>
         </div>
 
-        <input id="fileInput" type="file" class="hidden" accept=".jpg,.png">
+        <input id="fileInput" type="file" class="hidden" accept=".jpg,.png,.gif,.jpeg">
+        <p id="error" class="text-red-600 mt-4 text-sm"></p>
         <div class="mt-4">
             <button id="uploadButton"
                 class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Upload</button>
