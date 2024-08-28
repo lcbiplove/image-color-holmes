@@ -29,6 +29,7 @@ def detect_colors(filename, cluster_count=5) -> list[dict]:
         red = int(color[0])
         green = int(color[1])
         blue = int(color[2])
+        closest_name = closest_colour((red, green, blue))  # Get the closest color name
         hex_code = f"#{red:02x}{green:02x}{blue:02x}"
         color = {
             "red": int(color[0]),
@@ -36,9 +37,21 @@ def detect_colors(filename, cluster_count=5) -> list[dict]:
             "blue": int(color[2]),
             "percentage": float(round(percentage, 2)),
             "hex_code": hex_code,
-            "color_name": webcolors.hex_to_name(hex_code),
+            "color_name": closest_name,  # Add the closest color name here
         }
         colors.append(
             color,
         )
     return colors
+
+# Function to get the closest color name
+def closest_colour(requested_colour):
+    min_colours = {}
+    for name in webcolors.names("css3"):
+#         print(name)
+        r_c, g_c, b_c = webcolors.name_to_rgb(name)
+        rd = (r_c - requested_colour[0]) ** 2
+        gd = (g_c - requested_colour[1]) ** 2
+        bd = (b_c - requested_colour[2]) ** 2
+        min_colours[(rd + gd + bd)] = name
+    return min_colours[min(min_colours.keys())]

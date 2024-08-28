@@ -75,7 +75,7 @@ document.getElementById("uploadButton").addEventListener("click", () => {
                           <span class="text-lg font-semibold text-gray-800">
                               RGB(${color.red}, ${color.green}, ${color.blue})
                           </span>
-                          <div class="text-sm text-gray-600">${color.color_name}</div>
+                          <div class="text-sm uppercase font-bold text-gray-600">${color.color_name}</div>
                           <div class="text-sm text-gray-600">${color.hex_code}</div>
                           <div class="text-sm text-gray-600 mt-1">${color.percentage}%</div>
                       </div>
