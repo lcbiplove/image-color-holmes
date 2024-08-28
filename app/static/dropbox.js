@@ -72,10 +72,10 @@ document.getElementById("uploadButton").addEventListener("click", () => {
                   <li class="flex items-center p-4 bg-gray-150 border border-gray-200 rounded-md">
                       <div class="w-10 h-10 rounded-md mr-4 flex-shrink-0 border border-gray-300" style="background-color: ${color.hex_code};"></div>
                       <div>
-                          <span class="text-lg font-semibold text-gray-800">
-                              RGB(${color.red}, ${color.green}, ${color.blue})
+                          <span class="text-lg capitalize font-semibold text-gray-800">
+                              ${color.color_name}
                           </span>
-                          <div class="text-sm uppercase font-bold text-gray-600">${color.color_name}</div>
+                          <div class="text-sm text-gray-600">rgb(${color.red}, ${color.green}, ${color.blue})</div>
                           <div class="text-sm text-gray-600">${color.hex_code}</div>
                           <div class="text-sm text-gray-600 mt-1">${color.percentage}%</div>
                       </div>
