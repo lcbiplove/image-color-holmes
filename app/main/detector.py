@@ -1,3 +1,4 @@
+import webcolors
 import cv2
 import numpy as np
 from sklearn.cluster import KMeans
@@ -28,12 +29,14 @@ def detect_colors(filename, cluster_count=5) -> list[dict]:
         red = int(color[0])
         green = int(color[1])
         blue = int(color[2])
+        hex_code = f"#{red:02x}{green:02x}{blue:02x}"
         color = {
             "red": int(color[0]),
             "green": int(color[1]),
             "blue": int(color[2]),
             "percentage": float(round(percentage, 2)),
-            "hex_code": f"#{red:02x}{green:02x}{blue:02x}",
+            "hex_code": hex_code,
+            "color_name": webcolors.hex_to_name(hex_code),
         }
         colors.append(
             color,

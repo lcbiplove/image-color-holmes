@@ -27,4 +27,4 @@ def upload():
         return jsonify({
             "data": colors
         })
-    return jsonify({"error": "Error proecessing file."})
+    return jsonify({"error": "Error processing file."})
