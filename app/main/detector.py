@@ -10,7 +10,6 @@ def detect_colors(filename, cluster_count=5) -> list[dict]:
 
     pixels = rgb_image.reshape(-1, 3)
 
-    # Apply K-Means clustering
     kmeans = KMeans(n_clusters=cluster_count, random_state=0)
     kmeans.fit(pixels)
     colors = kmeans.cluster_centers_
