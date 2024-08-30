@@ -6,5 +6,4 @@ scikit-learn
 matplotlib
 webcolors
 boto3
-gunicorn
-wheels
+waitress
