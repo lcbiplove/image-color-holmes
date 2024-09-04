@@ -4,20 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %} - FlaskApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}" />
     <script src="{{ url_for('static', filename='tailwind_3.4.5.js') }}"></script>
 </head>
 
 <body>
 
     <div class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-6 flex justify-between items-center">
-            <a href="#" class="text-xl font-semibold text-blue-800">ImageColorFinder</a>
-
-            <div class="hidden md:flex space-x-8">
-                <a href="#" class="text-gray-600 hover:text-blue-600">Home</a>
-                <a href="#" class="text-gray-600 hover:text-blue-600">About</a>
-                <a href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
-            </div>
+        <div class="container mx-auto px-4 py-6 flex justify-center items-center">
+            <a href="#" class="text-xl font-semibold text-blue-800">
+                <img class="w-56" src="{{ url_for('static', filename='images/logo.png') }}" />
+            </a>
         </div>
     </div>
 

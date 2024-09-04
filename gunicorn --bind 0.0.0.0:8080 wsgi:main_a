@@ -7,15 +7,16 @@ Description=Gunicorn instance to serve color_finder
 After=network.target
 
 [Service]
-User=www-data
+User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/color_finder
 Environment="PATH=/home/ubuntu/color_finder/.venv/bin"
-ExecStart=/home/ubuntu/color_finder/.venv/bin/gunicorn --workers 3 --bind unix:color_finder.sock -m 007 wsgi:main_app
+ExecStart=/home/ubuntu/color_finder/.venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 wsgi:main_app
 
 [Install]
 WantedBy=multi-user.target
 
+sudo rm -rf /etc/nginx/sites-available/color_finder
 
 sudo vim /etc/nginx/sites-available/color_finder
 
@@ -24,10 +25,17 @@ server {
     server_name colorfinder.tech www.colorfinder.tech;
 
     location / {
-        proxy_pass http://unix:/home/ubuntu/color_finder/color_finder.sock;
+        proxy_pass http://localhost:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
+
+sudo ln -s /etc/nginx/sites-available/color_finder /etc/nginx/sites-enabled
+
+sudo systemctl daemon-reload
+sudo systemctl restart color_finder
+sudo systemctl enable color_finder
+sudo systemctl status color_finder
