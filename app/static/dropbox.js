@@ -85,6 +85,12 @@ document.getElementById("uploadButton").addEventListener("click", () => {
                 .join("")}
           </ul>
       `;
+    })
+    .catch((error) => {
+      hideLoader();
+      resultbox.innerHTML = `
+          <p class="text-red-600">An error occurred while processing the image. Please try again.</p>
+      `;
     });
 });
 
