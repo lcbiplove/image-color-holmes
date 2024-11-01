@@ -26,9 +26,9 @@ def upload():
         file.save(temp_file.name)
         colors = detect_colors(filename=temp_file.name)
 
-        with open(temp_file.name, "rb") as data:
-            random_filename = str(uuid.uuid4()) + "." + file.filename.rsplit(".", 1)[1]
-            s3_client.upload_fileobj(data, BUCKET_NAME, random_filename)
+        # with open(temp_file.name, "rb") as data:
+        #     random_filename = str(uuid.uuid4()) + "." + file.filename.rsplit(".", 1)[1]
+        #     s3_client.upload_fileobj(data, BUCKET_NAME, random_filename)
 
         return jsonify({"data": colors})
     return jsonify({"error": "Error processing file."})
