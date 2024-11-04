@@ -1,22 +1,32 @@
-FROM python:3.11-alpine as builder
+FROM python:3.11-slim as builder
 
 WORKDIR /color-finder
 
-COPY requirements.txt . 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libglib2.0-0 \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir ./wheels -r requirements.txt
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --wheel-dir ./wheels -r requirements.txt
 
-FROM python:3.11-alpine
-
+FROM python:3.11-slim
 
 WORKDIR /color-finder
 
-COPY --from=builder /color-finder/wheels ./wheels
-COPY --from=builder /color-finder/requirements.txt ./requirements.txt
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip
-RUN pip install --no-cache ./wheels/*
+COPY --from=builder /color-finder/wheels /wheels
+COPY --from=builder /color-finder/requirements.txt .
+
+RUN pip install --no-cache-dir /wheels/*
+
+COPY . .
 
 EXPOSE 5000
 
-CMD ["gunicorn", "wsgi:main_app", "-b", "0.0.0.0:5000", "-w", "4"]
+CMD ["gunicorn", "wsgi:main_app", "-b", "0.0.0.0:5000", "-w", "4", "--log-level", "debug"]

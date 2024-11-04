@@ -5,4 +5,4 @@ services:
     image: ghcr.io/lcbiplove/color_finder:latest
     container_name: color_finder
     ports: 
-      - 5000:5000
+      - 8888:5000
