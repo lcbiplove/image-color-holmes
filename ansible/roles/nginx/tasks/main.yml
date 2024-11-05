@@ -1,0 +1,31 @@
+- name: Install NGINX
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Copy NGINX configuration for the app
+  template:
+    src: nginx_conf.j2
+    dest: /etc/nginx/sites-available/color_finder
+
+- name: Enable NGINX site
+  file:
+    src: /etc/nginx/sites-available/color_finder
+    dest: /etc/nginx/sites-enabled/color_finder
+    state: link
+
+- name: Install Certbot for Let's Encrypt
+  apt:
+    name: certbot
+    state: present
+
+- name: Obtain Let's Encrypt SSL Certificate
+  command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m {{ domain_email }}
+    args:
+      creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+
+- name: Reload NGINX
+  service:
+    name: nginx
+    state: reloaded

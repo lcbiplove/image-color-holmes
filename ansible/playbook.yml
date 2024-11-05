@@ -1,0 +1,25 @@
+- hosts: Color Finder Server
+  become: yes
+  tasks:
+    - name: Log in to Docker Hub
+      community.docker.docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+
+    - name: Pull latest Docker image
+      community.docker.docker_image:
+        name: ghcr.io/lcbiplove/color_finder:latest
+        pull: yes
+
+    - name: Stop and remove existing container
+      community.docker.docker_container:
+        name: color_finder
+        state: absent
+
+    - name: Run the Docker container
+      community.docker.docker_container:
+        name: color_finder
+        image: ghcr.io/lcbiplove/color_finder:latest
+        ports:
+          - "8888:5000"
+        restart_policy: always

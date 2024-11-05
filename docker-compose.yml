@@ -4,5 +4,5 @@ services:
       dockerfile: Dockerfile
     image: ghcr.io/lcbiplove/color_finder:latest
     container_name: color_finder
-    ports: 
+    ports:
       - 8888:5000
