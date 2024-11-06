@@ -38,7 +38,6 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
 
-      steps:
       - name: Set up SSH for server access
         uses: webfactory/ssh-agent@v0.5.3
         with:
