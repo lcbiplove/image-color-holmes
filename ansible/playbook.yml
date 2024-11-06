@@ -1,8 +1,9 @@
 - hosts: Color Finder Server
   become: yes
   tasks:
-    - name: Log in to Docker Hub
+    - name: Log in to Github Container Registry
       community.docker.docker_login:
+        registry: ghcr.io
         username: "{{ docker_username }}"
         password: "{{ docker_password }}"
 
