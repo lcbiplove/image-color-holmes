@@ -11,7 +11,7 @@ env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   SSH_SERVER_USER: ${{ secrets.SSH_SERVER_USER }}
   SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
-  DOMAIN_NAME_VAR: ${{ vars.DOMAIN_NAME }}
+  DOMAIN_NAME_VAR: ${{ vars.DOMAIN_NAME_VAR }}
   DOMAIN_EMAIL_VAR: ${{ vars.DOMAIN_EMAIL_VAR }}
 
 jobs:
@@ -22,29 +22,28 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Log in to Github Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: $DOCKER_GHCR_USER
-          password: $DOCKER_GHCR_PASS
+        run: |
+          echo $DOCKER_GHCR_PASS | docker login ghcr.io -u $DOCKER_GHCR_USER --password-stdin
 
       - name: Build and push Docker image using Docker Compose
         run: |
           docker compose build
           docker compose push
 
-  deploy-ansible:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH for server access
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: $SSH_PRIVATE_KEY
-
       - name: Deploy with Ansible from the server
-        run: |
-          ansible-playbook ansible/playbook.yml -i "$SSH_SERVER_IP," -u $SSH_SERVER_USER \
-          --extra-vars "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR "
+        uses: appleboy/ssh-action@master
+        with:
+          host: $SSH_SERVER_IP
+          username: $SSH_SERVER_USER
+          key: $SSH_PRIVATE_KEY
+          port: 22
+          script: |
+            ansible-playbook ansible/playbook.yml -i "localhost," -c local \
+              --extra-vars "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR"
