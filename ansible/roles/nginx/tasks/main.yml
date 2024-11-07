@@ -22,8 +22,8 @@
 
 - name: Obtain Let's Encrypt SSL Certificate
   command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m {{ domain_email }}
-    args:
-      creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+  args:
+    creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
 
 - name: Reload NGINX
   service:
