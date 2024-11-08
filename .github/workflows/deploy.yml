@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Log in to Github Container Registry
         run: |
@@ -28,7 +28,9 @@ jobs:
         run: |
           docker compose build
           docker compose push
+
   deploy-with-ansible:
+    needs: build-push-docker
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
