@@ -13,6 +13,7 @@ env:
   SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
   DOMAIN_NAME_VAR: ${{ vars.DOMAIN_NAME }}
   DOMAIN_EMAIL_VAR: ${{ vars.DOMAIN_EMAIL_VAR }}
+  ANSIBLE_BECOME_PASS: ${{ secrets.ANSIBLE_BECOME_PASS }}
 
 jobs:
   build-push-docker:
@@ -63,4 +64,4 @@ jobs:
             tar -xvf ~/color-finder/ansible.tar -C ~/color-finder
             rm -rf ~/color-finder/ansible.tar
             ansible-playbook ~/color-finder/ansible/playbook.yml -i "localhost," -c local \
-              --extra-vars "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR"
+              --extra-vars "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR ansible_become_pass=$ANSIBLE_BECOME_PASS"

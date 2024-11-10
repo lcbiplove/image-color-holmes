@@ -1,6 +1,8 @@
 - name: Deploy with Ansible
   hosts: localhost
-  become: yes
+  become: true
+  vars:
+    ansible_become_password: '{{ ansible_become_pass }}'
   tasks:
     - name: Log in to Github Container Registry
       community.docker.docker_login:
