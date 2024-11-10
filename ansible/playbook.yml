@@ -4,6 +4,12 @@
   vars:
     ansible_become_password: '{{ ansible_become_pass }}'
   tasks:
+    - name: Ensure Docker is installed
+        apt:
+          name: docker.io
+          state: present
+        become: true
+
     - name: Log in to Github Container Registry
       community.docker.docker_login:
         registry: ghcr.io
