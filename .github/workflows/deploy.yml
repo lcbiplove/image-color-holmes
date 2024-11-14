@@ -64,4 +64,4 @@ jobs:
             tar -xvf ~/color-finder/ansible.tar -C ~/color-finder
             rm -rf ~/color-finder/ansible.tar
             ansible-playbook ~/color-finder/ansible/playbook.yml -i "localhost," -c local \
-              --extra-vars "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR ansible_become_pass=$ANSIBLE_BECOME_PASS"
+              -e "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR ansible_become_pass=$ANSIBLE_BECOME_PASS"
