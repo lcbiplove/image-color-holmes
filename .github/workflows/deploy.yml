@@ -5,16 +5,6 @@ on:
     branches:
       - main
 
-env:
-  DOCKER_GHCR_USER: ${{ secrets.DOCKER_GHCR_USER }}
-  DOCKER_GHCR_PASS: ${{ secrets.DOCKER_GHCR_PASS }}
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  SSH_SERVER_USER: ${{ secrets.SSH_SERVER_USER }}
-  SSH_SERVER_IP: ${{ secrets.SSH_SERVER_IP }}
-  DOMAIN_NAME_VAR: ${{ vars.DOMAIN_NAME }}
-  DOMAIN_EMAIL_VAR: ${{ vars.DOMAIN_EMAIL_VAR }}
-  ANSIBLE_BECOME_PASS: ${{ secrets.ANSIBLE_BECOME_PASS }}
-
 jobs:
   build-push-docker:
     runs-on: ubuntu-latest
@@ -24,7 +14,7 @@ jobs:
 
       - name: Log in to Github Container Registry
         run: |
-          echo $DOCKER_GHCR_PASS | docker login ghcr.io -u $DOCKER_GHCR_USER --password-stdin
+          echo ${{ secrets.DOCKER_GHCR_PASS }} | docker login ghcr.io -u ${{ secrets.DOCKER_GHCR_USER }} --password-stdin
       - name: Build and push Docker image using Docker Compose
         run: |
           docker compose build
@@ -64,4 +54,4 @@ jobs:
             tar -xvf ~/color-finder/ansible.tar -C ~/color-finder
             rm -rf ~/color-finder/ansible.tar
             ansible-playbook ~/color-finder/ansible/playbook.yml -i "localhost," -c local \
-              -e "domain_name=$DOMAIN_NAME_VAR docker_username=$DOCKER_GHCR_USER docker_password=$DOCKER_GHCR_PASS domain_email=$DOMAIN_EMAIL_VAR ansible_become_pass=$ANSIBLE_BECOME_PASS"
+              -e "domain_name=${{ secrets.DOMAIN_NAME }} docker_username=${{ secrets.DOCKER_GHCR_USER }} docker_password=${{ secrets.DOCKER_GHCR_PASS }} domain_email=${{ secrets.DOMAIN_EMAIL }} ansible_become_pass=${{ secrets.ANSIBLE_BECOME_PASS }}"
