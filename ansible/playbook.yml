@@ -20,12 +20,13 @@
         registry: ghcr.io
         username: "{{ docker_username }}"
         password: "{{ docker_password }}"
-
+    
     - name: Pull latest Docker image
       community.docker.docker_image:
-        name: ghcr.io/lcbiplove/color_finder:latest
-        pull: yes
-
+        name: ghcr.io/lcbiplove/color_finder
+        tag: latest
+        source: pull
+    
     - name: Stop and remove existing container
       community.docker.docker_container:
         name: color_finder
