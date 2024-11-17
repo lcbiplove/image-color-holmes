@@ -1,20 +1,9 @@
-- name: Deploy with Ansible
+- name: Deploy with the Docker
   hosts: localhost
   become: true
   vars:
     ansible_become_password: '{{ ansible_become_pass }}'
   tasks:
-    - name: Ensure Docker is installed
-      apt:
-        name: docker.io
-        state: present
-
-    - name: Restart Docker service (starts if not running)
-      service:
-        name: docker
-        state: restarted
-        enabled: true
-
     - name: Log in to Github Container Registry
       community.docker.docker_login:
         registry: ghcr.io
@@ -38,8 +27,3 @@
         image: ghcr.io/lcbiplove/color_finder:latest
         ports:
           - "8888:5000"
-        restart_policy: always
-
-- roles:
-    - docker
-    - nginx
