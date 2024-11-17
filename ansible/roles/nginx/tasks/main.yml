@@ -15,13 +15,21 @@
     dest: /etc/nginx/sites-enabled/color_finder
     state: link
 
+- name: Ensure NGINX is running
+  service:
+    name: nginx
+    state: started
+
 - name: Install Certbot for Let's Encrypt
   apt:
-    name: certbot
+    name:
+      - certbot
+      - python3-certbot-nginx
     state: present
 
 - name: Obtain Let's Encrypt SSL Certificate
-  command: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m {{ domain_email }}
+  command:
+    cmd: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m {{ domain_email }}
   args:
     creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
 

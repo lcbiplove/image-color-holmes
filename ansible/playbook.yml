@@ -27,3 +27,9 @@
         image: ghcr.io/lcbiplove/color_finder:latest
         ports:
           - "8888:5000"
+
+- name: Setup nginx
+  hosts: localhost
+  become: true
+  roles:
+    - nginx
