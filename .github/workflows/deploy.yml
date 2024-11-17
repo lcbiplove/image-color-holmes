@@ -27,11 +27,6 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Prepare Ansible Related Files
-        run: |
-          cp docker-compose.yml ansible/roles/docker/tasks
-          tar -cvf ansible.tar ansible
-
       - name: Copy Ansible File via ssh password
         uses: appleboy/scp-action@master
         with:
@@ -39,7 +34,7 @@ jobs:
           username: ${{ secrets.SSH_SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: "ansible.tar"
+          source: "ansible/*"
           target: "color-finder"
 
       - name: Deploy with Ansible from the server using Appleboy SSH
@@ -50,8 +45,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            rm -rf ~/color-finder/ansible
-            tar -xvf ~/color-finder/ansible.tar -C ~/color-finder
-            rm -rf ~/color-finder/ansible.tar
             ansible-playbook ~/color-finder/ansible/playbook.yml -i "localhost," -c local \
               -e "domain_name=${{ secrets.DOMAIN_NAME }} docker_username=${{ secrets.DOCKER_GHCR_USER }} docker_password=${{ secrets.DOCKER_GHCR_PASS }} domain_email=${{ secrets.DOMAIN_EMAIL }} ansible_become_pass=${{ secrets.ANSIBLE_BECOME_PASS }}"
