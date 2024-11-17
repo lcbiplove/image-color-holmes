@@ -1,7 +1,7 @@
 Flask
 python-dotenv
 numpy
-opencv-python
+opencv-python-headless
 scikit-learn
 matplotlib
 webcolors
