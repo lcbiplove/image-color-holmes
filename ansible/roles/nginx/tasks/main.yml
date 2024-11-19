@@ -4,12 +4,18 @@
     state: present
     update_cache: yes
 
-- name: Copy NGINX configuration for HTTP
+- name: Check if SSL certificate already exists
+  stat:
+    path: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+  register: ssl_cert
+
+- name: Configure NGINX with HTTP and HTTPS (if SSL exists)
   template:
     src: nginx_conf.j2
     dest: /etc/nginx/sites-available/color_finder
-
-- name: Enable NGINX HTTP site
+  when: not ssl_cert.stat.exists
+    
+- name: Enable NGINX site
   file:
     src: /etc/nginx/sites-available/color_finder
     dest: /etc/nginx/sites-enabled/color_finder
@@ -18,34 +24,22 @@
 - name: Ensure NGINX is running
   service:
     name: nginx
-    state: started
+    state: restarted
 
-- name: Install Certbot for Let's Encrypt
+- name: Install Certbot
   apt:
     name:
       - certbot
       - python3-certbot-nginx
     state: present
 
-- name: Check if SSL certificate already exists
-  stat:
-    path: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-  register: ssl_cert
-
-- name: Obtain Let's Encrypt SSL Certificate
+- name: Obtain SSL certificate
   command:
     cmd: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m {{ domain_email }}
   when: not ssl_cert.stat.exists
 
-- name: Update NGINX configuration for SSL
-  block:
-    - name: Copy NGINX SSL configuration
-      template:
-        src: nginx_ssl_conf.j2
-        dest: /etc/nginx/sites-available/color_finder
-
-    - name: Reload NGINX to apply SSL
-      service:
-        name: nginx
-        state: reloaded
+- name: Reload NGINX after SSL certificate generation
+  service:
+    name: nginx
+    state: reloaded
   when: ssl_cert.stat.exists
