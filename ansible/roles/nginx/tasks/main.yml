@@ -4,12 +4,12 @@
     state: present
     update_cache: yes
 
-- name: Copy NGINX configuration for the app
+- name: Copy NGINX configuration for HTTP
   template:
     src: nginx_conf.j2
     dest: /etc/nginx/sites-available/color_finder
 
-- name: Enable NGINX site
+- name: Enable NGINX HTTP site
   file:
     src: /etc/nginx/sites-available/color_finder
     dest: /etc/nginx/sites-enabled/color_finder
@@ -27,13 +27,25 @@
       - python3-certbot-nginx
     state: present
 
+- name: Check if SSL certificate already exists
+  stat:
+    path: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+  register: ssl_cert
+
 - name: Obtain Let's Encrypt SSL Certificate
   command:
     cmd: certbot --nginx -d {{ domain_name }} --non-interactive --agree-tos -m {{ domain_email }}
-  args:
-    creates: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
+  when: not ssl_cert.stat.exists
 
-- name: Reload NGINX
-  service:
-    name: nginx
-    state: reloaded
+- name: Update NGINX configuration for SSL
+  block:
+    - name: Copy NGINX SSL configuration
+      template:
+        src: nginx_ssl_conf.j2
+        dest: /etc/nginx/sites-available/color_finder
+
+    - name: Reload NGINX to apply SSL
+      service:
+        name: nginx
+        state: reloaded
+  when: ssl_cert.stat.exists
